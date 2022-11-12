@@ -11,9 +11,9 @@ tk_window.configure(background='white')
 tk_window.title("IA para daltônicos")
 width = tk_window.winfo_screenwidth()
 height = tk_window.winfo_screenheight()
-tk_window.geometry(f'{width}x{height}')
+tk_window.geometry(f'{1440}x{850}')
 tk_window.iconbitmap('./images/app.ico')
-tk_window.resizable(0, 0)
+tk_window.resizable(1, 1)
 
 # Size for displaying Image
 w = 400
@@ -65,10 +65,10 @@ def apply_ai(ai):
         resi = op.resize(size, Image.ANTIALIAS)
         tkimage3 = ImageTk.PhotoImage(resi)
         imageFrame3 = tk.Frame(tk_window)
-        imageFrame3.place(x=width - w - 200, y=230)
+        imageFrame3.place(x=950, y=230)
         dn3 = tk.Label(tk_window, text='Imagem Filtrada (Laplaciano)', width=30, height=1, fg="black",
                        font=('times', 14, ' bold '))
-        dn3.place(x=width - w - 200, y=200)
+        dn3.place(x=950, y=200)
         display3 = tk.Label(imageFrame3)
         display3.imgtk = tkimage3
         display3.configure(image=tkimage3)
