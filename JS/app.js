@@ -8,7 +8,7 @@ const canvas = document.getElementById("canvas"),
 
 const draw_image = (context) => {
   base_image = new Image();
-  base_image.src = "images/espectros_line.jpg";
+  base_image.src = "images/espectros-line.png";
   base_image.onload = () => {
     context.drawImage(base_image, 0, 0);
     const base_colors = context.getImageData(0, 0, 351, 1).data;
