@@ -7,23 +7,23 @@ import json
 rgb_max_value = 255
 
 
-def get_data_from_json_file(file_name):
+def get_data_from_json_file(file_name, color_type):
     f = open(file_name)
     data = json.load(f)
     f.close()
-    return data['entrances'], data['outputs']
+    return data['base'], data[color_type]
 
 
-def create_ai():
-    entrances, outputs = get_data_from_json_file('data.json')
+def create_ai(color_type):
+    entrances, outputs = get_data_from_json_file('full-data.json', color_type)
 
     entrances_np = np.array(entrances) / rgb_max_value
     outputs_np = np.array(outputs) / rgb_max_value
 
     limit_color = [0, 1]
     limits = [limit_color, limit_color, limit_color]
-    layer_1 = 3
-    layer_2 = 8
+    layer_1 = 6
+    layer_2 = 6
     layer_3 = 3
     layers = [layer_1, layer_2, layer_3]
 
@@ -33,8 +33,7 @@ def create_ai():
 
     print("Training errors : " + str(errors[-1]))
 
-    if errors[-1] < 0.0005:
-        ai_created.save('intelligence.net')
+    ai_created.save('intelligence_' + color_type + '.net')
 
     return ai_created
 
@@ -47,11 +46,12 @@ def load_ai(file_name):
 
 
 if __name__ == '__main__':
-    ai = load_ai('intelligence.net')
+    prot_type = 'prot'
+    ai = load_ai('intelligence_' + prot_type + '.net')
     if not ai:
-        ai = create_ai()
+        ai = create_ai(prot_type)
 
-    test = ai.sim([np.array([90, 120, 60]) / rgb_max_value])
+    test = ai.sim([np.array([127, 22, 29]) / rgb_max_value])
     print("test = " + str(test * rgb_max_value))
 
 
