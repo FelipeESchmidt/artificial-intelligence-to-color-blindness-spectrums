@@ -32,10 +32,15 @@ const getDarkerColors = (colors) => {
 };
 
 const generateCommomColors = () => {
-  return Array.from(Array(25)).map(() => {
-    const number = Math.round(Math.random() * 255);
-    return [number, number, number];
-  });
+  return Array.from(Array(25))
+    .map(() => {
+      const number = Math.round(Math.random() * 255);
+      return [number, number, number];
+    })
+    .concat([
+      [0, 0, 0],
+      [255, 255, 255],
+    ]);
 };
 
 const commomColors = generateCommomColors();
