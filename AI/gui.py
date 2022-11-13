@@ -21,6 +21,12 @@ h = 280
 size = (w, h)
 
 
+def apply_type(type_to):
+    global type_selected
+    type_selected = type_to
+    apply_ai(nl.load('intelligence_' + type_to + '.net'))
+
+
 def upload_im():
     try:
         global im, resized
@@ -40,7 +46,7 @@ def upload_im():
         del im
         noti = tk.Label(tk_window, text='Problema ao carregar imagem', width=33, height=1, fg="white", bg="black",
                         font=('times', 15, ' bold '))
-        noti.place(x=240, y=500)
+        noti.place(x=600, y=650)
         tk_window.after(5000, destroy_widget, noti)
 
 
@@ -77,7 +83,7 @@ def apply_ai(ai):
         print(e)
         noti = tk.Label(tk_window, text='Carregue uma imagem primeiro', width=33, height=1, fg="white", bg="black",
                         font=('times', 15, ' bold '))
-        noti.place(x=240, y=500)
+        noti.place(x=600, y=650)
         tk_window.after(5000, destroy_widget, noti)
 
 
@@ -86,17 +92,17 @@ def save_img():
         global noti, dna
         ts = datetime.datetime.now()
         current_date = ts.strftime("%Y-%m-%d_%H-%M-%S")
-        filename = "{}_filter.jpg".format(current_date)
+        filename = current_date + "_" + type_selected + ".png"
         op.save('./Captures/' + filename)
 
         dna = tk.Label(tk_window, text='Imagem salva em /Captures', width=33, height=1, fg="black", bg="spring green",
                        font=('times', 15, ' bold '))
-        dna.place(x=240, y=500)
+        dna.place(x=600, y=650)
         tk_window.after(5000, destroy_widget, dna)
     except:
         noti = tk.Label(tk_window, text='Problema ao salvar as imagens', width=33, height=1, fg="white", bg="black",
                         font=('times', 15, ' bold '))
-        noti.place(x=240, y=500)
+        noti.place(x=600, y=650)
         tk_window.after(5000, destroy_widget, noti)
 
 
@@ -144,19 +150,19 @@ quitLab.place(x=20, y=640)
 
 # BOTÃO DE PROTANOPIA
 med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Protanopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_ai(nl.load('intelligence_prot.net')))
+                font=('times', 16, 'italic bold '), command=lambda: apply_type('prot'))
 med.place(x=700, y=280)
 # BOTÃO DE PROTANOPIA
 
 # BOTÃO DE DEUTERANOPIA
 med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Deuteranopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_ai(nl.load('intelligence_deut.net')))
+                font=('times', 16, 'italic bold '), command=lambda: apply_type('deut'))
 med.place(x=700, y=360)
 # BOTÃO DE DEUTERANOPIA
 
 # BOTÃO DE TRITANOPIA
 med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Tritanopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_ai(nl.load('intelligence_trit.net')))
+                font=('times', 16, 'italic bold '), command=lambda: apply_type('trit'))
 med.place(x=700, y=440)
 # BOTÃO DE TRITANOPIA
 
