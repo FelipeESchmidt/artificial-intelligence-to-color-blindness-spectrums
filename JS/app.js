@@ -15,18 +15,18 @@ const transformColor = (color, transformBy) => {
 
 const getLighterColors = (colors) => {
   const lighterColors = colors.map(([r, g, b]) => [
-    transformColor(r, 1.2),
-    transformColor(g, 1.2),
-    transformColor(b, 1.2),
+    transformColor(r, 1.4),
+    transformColor(g, 1.4),
+    transformColor(b, 1.4),
   ]);
   return lighterColors;
 };
 
 const getDarkerColors = (colors) => {
   const darkerColors = colors.map(([r, g, b]) => [
-    transformColor(r, 0.8),
-    transformColor(g, 0.8),
-    transformColor(b, 0.8),
+    transformColor(r, 0.6),
+    transformColor(g, 0.6),
+    transformColor(b, 0.6),
   ]);
   return darkerColors;
 };
