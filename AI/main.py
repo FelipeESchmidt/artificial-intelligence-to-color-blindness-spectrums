@@ -46,7 +46,8 @@ def load_ai(file_name):
 
 
 if __name__ == '__main__':
-    prot_type = 'prot'
+    cb_types = ['prot', 'deut', 'trit']
+    prot_type = cb_types[2]
     ai = load_ai('intelligence_' + prot_type + '.net')
     if not ai:
         ai = create_ai(prot_type)

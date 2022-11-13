@@ -66,7 +66,7 @@ def apply_ai(ai):
         tkimage3 = ImageTk.PhotoImage(resi)
         imageFrame3 = tk.Frame(tk_window)
         imageFrame3.place(x=950, y=230)
-        dn3 = tk.Label(tk_window, text='Imagem Filtrada (Laplaciano)', width=30, height=1, fg="black",
+        dn3 = tk.Label(tk_window, text='Imagem Transformada com IA', width=30, height=1, fg="black",
                        font=('times', 14, ' bold '))
         dn3.place(x=950, y=200)
         display3 = tk.Label(imageFrame3)
