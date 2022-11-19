@@ -68,17 +68,6 @@ def apply_ai(ai):
             result.wait()
             new_img = np.array(result.get())
 
-        """
-        for i in range(len(img)):
-            i_arrays = img[i][:, :3]
-            for j in range(len(i_arrays)):
-                transformed = ai.sim([i_arrays[j] / 255])[0] * 255
-                if img.shape[2] == 3:
-                    new_img[i][j] = transformed
-                else:
-                    new_img[i][j] = np.append(transformed, [255])
-        """
-
         op = Image.fromarray(np.uint8(new_img))
 
         resi = op.resize(size, Image.ANTIALIAS)
