@@ -1,4 +1,4 @@
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from transform import transform_line
 from tkinter import filedialog
 from tkinter import *
@@ -63,7 +63,7 @@ def apply_ai(ai):
 
         img = np.array(np.asarray(im))
 
-        with Pool(5) as p:
+        with Pool(cpu_count()) as p:
             result = (p.map_async(transform_line, [[line, ai] for line in img]))
             result.wait()
             new_img = np.array(result.get())
