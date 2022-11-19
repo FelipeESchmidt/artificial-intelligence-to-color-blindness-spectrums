@@ -1,3 +1,5 @@
+from multiprocessing import Pool
+from transform import transform_line
 from tkinter import filedialog
 from tkinter import *
 import tkinter as tk
@@ -6,19 +8,23 @@ import neurolab as nl
 import numpy as np
 import datetime
 
-tk_window = Tk()
-tk_window.configure(background='white')
-tk_window.title("IA para daltônicos")
-width = tk_window.winfo_screenwidth()
-height = tk_window.winfo_screenheight()
-tk_window.geometry(f'{1440}x{850}')
-tk_window.iconbitmap('./images/app.ico')
-tk_window.resizable(1, 1)
-
 # Size for displaying Image
 w = 400
 h = 280
 size = (w, h)
+
+
+def start_app():
+    global tk_window
+    tk_window = Tk()
+    tk_window.configure(background='white')
+    tk_window.title("IA para daltônicos")
+
+    tk_window.geometry(f'{1440}x{835}')
+    tk_window.iconbitmap('./images/app.ico')
+    tk_window.resizable(1, 1)
+
+    render()
 
 
 def apply_type(type_to):
@@ -54,9 +60,14 @@ def apply_ai(ai):
     try:
         global op
 
-        img = np.asarray(im)
-        new_img = np.array(im)
+        img = np.array(np.asarray(im))
 
+        with Pool(5) as p:
+            result = (p.map_async(transform_line, [[line, ai] for line in img]))
+            result.wait()
+            new_img = np.array(result.get())
+
+        """
         for i in range(len(img)):
             i_arrays = img[i][:, :3]
             for j in range(len(i_arrays)):
@@ -65,9 +76,10 @@ def apply_ai(ai):
                     new_img[i][j] = transformed
                 else:
                     new_img[i][j] = np.append(transformed, [255])
+        """
 
+        op = Image.fromarray(np.uint8(new_img))
 
-        op = Image.fromarray(new_img)
         resi = op.resize(size, Image.ANTIALIAS)
         tkimage3 = ImageTk.PhotoImage(resi)
         imageFrame3 = tk.Frame(tk_window)
@@ -116,60 +128,59 @@ def destroy_widget(widget):
     widget.destroy()
 
 
-#
-#   RENDERS ---- visual
-#
+def render():
+    # BOTÃO DE UPLOAD
+    up_image = PhotoImage(file="./images/upload.png")
+    up = tk.Button(tk_window, image=up_image, bg="white", borderwidth=0, command=upload_im)
+    up.place(x=20, y=50)
+    upLab = tk.Label(tk_window, text="Carregar", bg="#e53935", fg="white", width=11, height=1,
+                     font=('times', 16, 'italic bold '))
+    upLab.place(x=20, y=160)
+    # BOTÃO DE UPLOAD
 
-# BOTÃO DE UPLOAD
-up_image = PhotoImage(file="./images/upload.png")
-up = tk.Button(tk_window, image=up_image, bg="white", borderwidth=0, command=upload_im)
-up.place(x=20, y=50)
-upLab = tk.Label(tk_window, text="Carregar", bg="#e53935", fg="white", width=11, height=1,
-                 font=('times', 16, 'italic bold '))
-upLab.place(x=20, y=160)
-# BOTÃO DE UPLOAD
+    # BOTÃO DE SAVE
+    save_image = PhotoImage(file="./images/save.png")
+    save = tk.Button(tk_window, borderwidth=0, bg='white', image=save_image, command=save_img)
+    save.place(x=20, y=290)
+    saveLab = tk.Label(tk_window, text="Salvar", bg="#e53935", fg="white", width=11, height=1,
+                       font=('times', 16, 'italic bold '))
+    saveLab.place(x=20, y=400)
+    # BOTÃO DE SAVE
 
-# BOTÃO DE SAVE
-save_image = PhotoImage(file="./images/save.png")
-save = tk.Button(tk_window, borderwidth=0, bg='white', image=save_image, command=save_img)
-save.place(x=20, y=290)
-saveLab = tk.Label(tk_window, text="Salvar", bg="#e53935", fg="white", width=11, height=1,
-                   font=('times', 16, 'italic bold '))
-saveLab.place(x=20, y=400)
-# BOTÃO DE SAVE
+    # BOTÃO DE QUIT
+    quit_image = PhotoImage(file="./images/quit.png")
+    q = tk.Button(tk_window, borderwidth=0, bg='white', image=quit_image, command=leave)
+    q.place(x=20, y=530)
+    quitLab = tk.Label(tk_window, text="Sair", bg="#e53935", fg="white", width=11, height=1,
+                       font=('times', 16, 'italic bold '))
+    quitLab.place(x=20, y=640)
+    # BOTÃO DE QUIT
 
-# BOTÃO DE QUIT
-quit_image = PhotoImage(file="./images/quit.png")
-q = tk.Button(tk_window, borderwidth=0, bg='white', image=quit_image, command=leave)
-q.place(x=20, y=530)
-quitLab = tk.Label(tk_window, text="Sair", bg="#e53935", fg="white", width=11, height=1,
-                   font=('times', 16, 'italic bold '))
-quitLab.place(x=20, y=640)
-# BOTÃO DE QUIT
+    # BOTÃO DE PROTANOPIA
+    med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Protanopia',
+                    font=('times', 16, 'italic bold '), command=lambda: apply_type('prot'))
+    med.place(x=700, y=280)
+    # BOTÃO DE PROTANOPIA
 
+    # BOTÃO DE DEUTERANOPIA
+    med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Deuteranopia',
+                    font=('times', 16, 'italic bold '), command=lambda: apply_type('deut'))
+    med.place(x=700, y=360)
+    # BOTÃO DE DEUTERANOPIA
 
-# BOTÃO DE PROTANOPIA
-med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Protanopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_type('prot'))
-med.place(x=700, y=280)
-# BOTÃO DE PROTANOPIA
+    # BOTÃO DE TRITANOPIA
+    med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Tritanopia',
+                    font=('times', 16, 'italic bold '), command=lambda: apply_type('trit'))
+    med.place(x=700, y=440)
+    # BOTÃO DE TRITANOPIA
 
-# BOTÃO DE DEUTERANOPIA
-med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Deuteranopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_type('deut'))
-med.place(x=700, y=360)
-# BOTÃO DE DEUTERANOPIA
+    names = tk.Label(tk_window, text="© Developed by Felipe E. Schmidt ©", bg="#616161", fg="white", width=67,
+                     height=2, font=('times', 30, 'italic bold '))
+    names.place(x=00, y=740)
 
-# BOTÃO DE TRITANOPIA
-med = tk.Button(tk_window, borderwidth=0, bg='#1e88e5', fg="white", width=11, text='Tritanopia',
-                font=('times', 16, 'italic bold '), command=lambda: apply_type('trit'))
-med.place(x=700, y=440)
-# BOTÃO DE TRITANOPIA
+    # tk_window.protocol("WM_DELETE_WINDOW", leave)
+    tk_window.mainloop()
 
 
-names = tk.Label(tk_window, text="© Developed by Felipe E. Schmidt ©", bg="#616161", fg="white", width=67,
-                 height=2, font=('times', 30, 'italic bold '))
-names.place(x=00, y=740)
-
-tk_window.protocol("WM_DELETE_WINDOW", leave)
-tk_window.mainloop()
+if __name__ == '__main__':
+    start_app()
