@@ -40,6 +40,7 @@ def upload_im():
         image_frame.place(x=200, y=230)
         path = filedialog.askopenfilename()
         im = Image.open(path)
+        im = im.convert('RGB')
         resized = im.resize(size, Image.ANTIALIAS)
         tk_image = ImageTk.PhotoImage(resized)
         display = tk.Label(image_frame)
@@ -104,7 +105,7 @@ def save_img():
         global noti, dna
         ts = datetime.datetime.now()
         current_date = ts.strftime("%Y-%m-%d_%H-%M-%S")
-        filename = current_date + "_" + type_selected + ".png"
+        filename = current_date + "_" + type_selected + ".jpg"
         op.save('./Captures/' + filename)
 
         dna = tk.Label(tk_window, text='Imagem salva em /Captures', width=33, height=1, fg="black", bg="spring green",
